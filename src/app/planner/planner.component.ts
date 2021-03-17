@@ -12,6 +12,8 @@ export class PlannerComponent implements OnInit {
   resultsMap = {};
   noOfPlayers: number;
   playerNames: string[] = [];
+  playerPoints = {};
+  playerRankings = [];
   pairs: string[] = [];
   tournament: TournamentModel[] = [];
   isPlayerInitialised: boolean = false;
@@ -25,11 +27,13 @@ export class PlannerComponent implements OnInit {
     this.isTournamentGenerated = false;
     this.isPlayerInitialised = false;
     this.pairs = [];
+    this.playerPoints = {};
   }
   initializeNoOfPlayers(n: number) {
     this.reinitialize(n);
     for (let i = 0; i < n; i++) {
       this.playerNames[i] = "Player " + (i + 1);
+      this.playerPoints[this.playerNames[i]] = 0;
     }
     this.isPlayerInitialised = true;
     this.submitData();
@@ -38,6 +42,10 @@ export class PlannerComponent implements OnInit {
     this.tournament = [];
     this.isTournamentGenerated = false;
     this.pairs = [];
+    this.playerPoints = {};
+    for (let i = 0; i < this.noOfPlayers; i++) {
+      this.playerPoints[this.playerNames[i]] = 0;
+    }
     this.submitData();
   }
   submitData() {
@@ -72,7 +80,6 @@ export class PlannerComponent implements OnInit {
           this.tournament.push(tournamentObject);
           let obj = { 'result': 'Who won?' };
           this.resultsMap[tournamentObject.sno] = obj;
-          console.log(this.resultsMap);
         }
       }
     }
@@ -84,8 +91,42 @@ export class PlannerComponent implements OnInit {
   trackByFn(index: any, item: any) {
     return index;
   }
-  updateResult(x,y) {
-   this.resultsMap[x+1].result = y;
+  updateResult(x, y) {
+    this.resultsMap[x + 1].result = y;
+    this.calculateRanking(x, y);
+  }
+
+  calculateRanking(x, y) {
+    let tnmt = this.tournament[x];
+    if (y == 'Team 1') {
+      let players = tnmt.team1;
+      let playersArr = players.split("&");
+      this.playerPoints[playersArr[0].trim()] += 1;
+      this.playerPoints[playersArr[1].trim()] += 1;
+    }
+    else {
+      let players = tnmt.team2;
+      let playersArr = players.split("&");
+      this.playerPoints[playersArr[0].trim()] += 1;
+      this.playerPoints[playersArr[1].trim()] += 1;
+    }
+    let pointsArr = [];
+    let keys = Object.keys(this.playerPoints)
+    for (let i = 0; i < keys.length; i++) {
+      pointsArr.push(this.playerPoints[keys[i]]);
+    }
+    pointsArr.sort((a, b) => { return b - a });
+    console.log(this.playerNames);
+    this.playerNames = [];
+    for(let j=0;j<pointsArr.length;j++){
+      for(let k=0;k<keys.length;k++) {
+        if(pointsArr[j] == this.playerPoints[keys[k]] && !this.playerNames.includes(keys[k])){
+          this.playerNames.push(keys[k]);
+        }
+      }
+    }
+    console.log(this.playerNames);
+
   }
 
 }

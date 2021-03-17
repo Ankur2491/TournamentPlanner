@@ -28,34 +28,54 @@
 <div class="container" *ngIf="isTournamentGenerated">
   <h2>Tournament Plan</h2>
   <p>The following is the tournament plan we generated for you:</p>
-  <table class="table table-dark table-hover">
-    <thead>
-      <tr>
-        <th>S.No</th>
-        <th>Team 1</th>
-        <th> </th>
-        <th>Team 2</th>
-        <th>Results</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let tObject of tournament; let i=index;">
-        <td>{{i+1}}</td>
-        <td>{{tObject.team1}}</td>
-        <td>vs</td>
-        <td>{{tObject.team2}}</td>
-        <td>
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="resultsButton" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              {{resultsMap[i+1].result}}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="resultsButton">
-              <a *ngFor="let j of results" class="dropdown-item" (click)="updateResult(i,j)">{{j}}</a>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col-md-9">
+      <table class="table table-dark table-hover">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Team 1</th>
+            <th> </th>
+            <th>Team 2</th>
+            <th>Results</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tObject of tournament; let i=index;">
+            <td>{{i+1}}</td>
+            <td>{{tObject.team1}}</td>
+            <td>vs</td>
+            <td>{{tObject.team2}}</td>
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="resultsButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{resultsMap[i+1].result}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="resultsButton">
+                  <a *ngFor="let j of results" class="dropdown-item" (click)="updateResult(i,j)">{{j}}</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-3">
+      <table class="table table-dark table-hover">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of playerNames; trackBy:trackByFn">
+            <td>{{player}}</td>
+            <td>{{playerPoints[player]}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
